@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>North Garage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <!-- link rel="stylesheet" href="/static/landPageStyle(login).css">  -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+</head>
+ <!--*********************tool bar ***********************-->
+<body>
+  <div class="container-fluid">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">North Garage</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Works List</a></li>
+        <li><a href="#">Costumers List</a></li>
+      </ul>
+      <ul ><label class="navbar-text">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello </label></ul>
+    </div>
+  </nav>
+
+
+
+
+
+  <div class="container">
+    <!--website body -->
+    <div id="webInfo"></div>
+     <div class="custom-select" style="width:200px;">
+       search by : 
+          <select>
+            <option value="WorkerNum">Worker Number</option>
+            <option value="ClientID">Client ID</option>
+            <option value="CarID">Car ID</option>
+            <option value="Status">Status</option>
+            <option value="TotalCost">Total Cost</option>
+          </select>
+        </div>
+      Search : <input id="myInput" type="text" name="search" style="width:200px;"><br>
+      <div class="custom-select" style="width:200px;">
+          Sort By : 
+             <select>
+               <option value="WorkerNum">Worker Number</option>
+               <option value="CarID">Car ID</option>
+               <option value="Status">Status</option>
+             </select>
+           </div>
+    
+      <table  id="workesTable"class="table table-hover" class="tablesorter">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col1">Worker Number</th>
+              <th scope="col2">Worker Name</th>
+              <th scope="col3">Client ID</th>
+              <th scope="col4">Car ID</th>
+              <th scope="col5">Cer Type</th>
+              <th scope="col6">Status</th>
+              <th scope="col7">Total Cost $</th>
+            </tr>
+          </thead>
+          <tbody id="workesList">
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <th scope="row" >3</th>
+              <td colspan="2">Larry the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="signupbtn" onclick="addwork()">add</button>
+
+
+    
+      </div> 
+     </div>
+     <script>
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#workesList tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
+        function addwork()
+        {
+          ''
+        }
+
+ /**       $(function() {
+        $("#myTable").tablesorter();
+    });**/
+        </script>
+
+
+
+</body>
+
+</html>
