@@ -11,7 +11,7 @@
         if (err) throw err;
         var dataBaseObject = db.db("projDB");
 
-
+ 
  /**open windows**/
  /**to use this run the server and write localhost3000/.... */
 app.get('/',(req,res)=>{
