@@ -13,27 +13,30 @@
 
 </head>
  <!--*********************tool bar ***********************-->
-<body background="static/Garage_imgs/backGround.jpg"><!--show why is not showing background-->
-  <div class="container-fluid" >
+<body background="/Garage_imgs/backGround.jpg">
+  <div class="container-fluid">
   <nav class="navbar navbar-inverse">
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="/static/HomePage.html">North Garage</a>
       </div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/static/WorkList.html">Works List</a></li>
-        <li><a href="/static/CostumersList.html">Costumers List</a></li>
+        <li><a href="/static/WorkList.html">Works List</a></li>
+        <li class="active"><a href="/static/CostumersList.html">Costumers List</a></li>
       </ul>
       <ul ><label class="navbar-text">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello </label></ul>
     </div>
   </nav>
 
 
-  <div class="transbox">
+
+
+
+  <div class="container">
     <!--website body -->
     <div id="webInfo"></div>
      <div class="custom-select" style="width:200px;">
-      <p> search by : 
+       search by : 
           <select>
             <option value="WorkerNum">Worker Number</option>
             <option value="ClientID">Client ID</option>
@@ -85,15 +88,12 @@
             </tr>
           </tbody>
         </table>
-
-      </p>
         <button type="button" class="signupbtn" onclick="addwork()">add</button>
 
 
     
       </div> 
      </div>
-
      <script>
         $(document).ready(function(){
           $("#myInput").on("keyup", function() {

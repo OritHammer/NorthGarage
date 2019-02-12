@@ -60,13 +60,18 @@ button:hover {
   float: right;
   width: 50%;
 }
-/*
-.container {
-  padding: 8px;
-  float: left;
-  width: 50%;
-}*/
 
+div.transbox {
+  margin: 5%;
+  background-color: #ffffff;
+  opacity: 0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+div.transbox p{
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+}
 span.psw {
   float: right;
   padding-top: 16px;

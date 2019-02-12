@@ -12,11 +12,24 @@
         var dataBaseObject = db.db("projDB");
 
 
-        /**open new pages */
+ /**open windows**/
+ /**to use this run the server and write localhost3000/.... */
 app.get('/',(req,res)=>{
   res.sendFile(__dirname+'/client/login.html');
 });
+app.get('/HomePage',(req,res)=>{
+  res.sendFile(__dirname+'/client/HomePage.html');
+});
+app.get('/workList',(req,res)=>{
+  res.sendFile(__dirname+'/client/workList.html');
+});
+app.get('/CostumersList',(req,res)=>{
+  res.sendFile(__dirname+'/client/CostumersList.html');
+});
 
+app.get('/CostumersList',(req,res)=>{
+  res.sendFile(__dirname+'/client/CostumersList.html');
+});
 
 
 
