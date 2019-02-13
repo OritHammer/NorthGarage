@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>North Garage- Work List</title>
+  <title>North Garage- costumers List</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <meta charset="utf-8">
@@ -13,7 +13,7 @@
  
 </head>
  <!--*********************tool bar ***********************-->
-<body background="/Garage_imgs/backGround.jpg">
+<body>
   <div class="container-fluid">
   <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -29,14 +29,11 @@
   </nav>
 
 
-
-
-
-  <div class="container">
+  <div class="transbox">
+  <div class="container-fluid">
     <!--website body -->
-    <div id="webInfo"></div>
      <div class="custom-select" style="width:200px;">
-       search by : 
+       <p>search by : 
           <select>
             <option value="WorkerNum">Worker Number</option>
             <option value="ClientID">Client ID</option>
@@ -91,9 +88,12 @@
         <button type="button" class="signupbtn" onclick="addwork()">add</button>
 
 
-    
+     
       </div> 
      </div>
+     </p>
+  </div>
+
      <script>
         $(document).ready(function(){
           $("#myInput").on("keyup", function() {

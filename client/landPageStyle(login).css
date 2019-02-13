@@ -1,5 +1,13 @@
 
- body {font-family: Arial, Helvetica, sans-serif;}
+ body {
+  margin:0;
+  padding: 0;
+  background: url(backGround.jpg) ;
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, Helvetica, sans-serif;
+  
+  }
 
 /* Full-width input fields */
 input[type=text], input[type=password] {
@@ -63,8 +71,7 @@ button:hover {
 
 div.transbox {
   margin: 5%;
-  background-color: #ffffff;
-  opacity: 0.6;
+  background-color: #ffffff9f;
   filter: alpha(opacity=60); /* For IE8 and earlier */
 }
 div.transbox p{

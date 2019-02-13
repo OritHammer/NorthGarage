@@ -88,7 +88,6 @@ var server=app.listen(3000, ()=> {console.log("server in ...")});
 
 
 
-
     /** insertNewEmployee
      * by: leeorr h
      * use : insert new employee to "employees" collection(table) by his all data
