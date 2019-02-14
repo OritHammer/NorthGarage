@@ -71,7 +71,14 @@ function myCreateFunction() {
         function myDeleteFunction() {
           document.getElementById("workesTable").deleteRow(1);
         }
-
+        $(document).ready(function(){
+          $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#workesList tr").filter(function() {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+          });
+        });
 </script>
 
 </body>

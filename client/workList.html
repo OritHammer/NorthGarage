@@ -34,12 +34,15 @@
     <!--website body -->
      <div class="custom-select" style="width:200px;">
        <p>search by : 
-          <select>
-            <option value="WorkerNum">Worker Number</option>
-            <option value="ClientID">Client ID</option>
-            <option value="CarID">Car ID</option>
+          <select id="colName">
+            <option value="Order Number">Order Number</th>
+            <option value="Worker Number">Worker Number</option>
+            <option value="Worker Name">Worker Name</option>
+            <option value="Client ID">Client ID</option>
+            <option value="Car ID">Car ID</option>
+            <option value="Car Type">Car Type</option>
             <option value="Status">Status</option>
-            <option value="TotalCost">Total Cost</option>
+            <option value="Total Cost $">Total Cost $</option>
           </select>
         </div>
       Search : <input id="myInput" type="text" name="search" style="width:200px;"><br>
@@ -55,6 +58,7 @@
       <table  id="workesTable"class="table table-hover" class="tablesorter">
           <thead>
             <tr>
+              <th scope="col">Order Number</th>
               <th scope="col1">Worker Number</th>
               <th scope="col2">Worker Name</th>
               <th scope="col3">Client ID</th>
@@ -65,49 +69,96 @@
             </tr>
           </thead>
           <tbody id="workesList">
+              <tr>
+                  <th scope="row">4656</th>
+                  <td>31312482</td>
+                  <td>Mark</td>
+                  <td>client id 1</td>
+                  <td>car id 1</td>
+                  <td>car type 1</td>
+                  <td>status 1</td>
+                  <td>total cost 50</td>
+                </tr>
+                <tr>
+                  <th scope="row">4657</th>
+                  <td>14412444</td>
+                  <td>Jacob</td>
+                  <td>client id 2</td>
+                  <td>car id 2</td>
+                  <td>car type 2</td>
+                  <td>status 2</td>
+                  <td>total cost 100</td>
+                </tr>
+                <tr>
+                  <th scope="row" >4658</th>
+                  <td>12111123</td>
+                  <td>Larry the Bird</td>
+                  <td>client id 3</td>
+                  <td>car id 3</td>
+                  <td>car type 3</td>
+                  <td>status 3</td>
+                  <td>total cost 122</td>
+                </tr>
           </tbody>
         </table>
         <button type="button" class="signupbtn" onclick="addwork()">add</button>
         
         <button onclick="myCreateFunction()">Create row</button>
-        <button onclick="myDeleteFunction()">Delete row</button>
-        
-        
-
-     
+        <button onclick="myDeleteFunction()">Delete row</button>    
       </div> 
      </div>
      </p>
   </div>
   
      <script>
-        $(document).ready(function(){
-          $("#myInput").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#workesList tr").filter(function() {
-              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-          });
+       /**serch by listener**/
+       $(document).ready(function () {
+          var $s = $('#colName').on('change', filter);
+          var $i = $("#myInput").on('keyup', filter);
+          var $rows = $("#workesTable tbody > tr");
+    
+          function filter() {
+              var index = $s.prop('selectedIndex');
+              var term = $.trim($i.val().toLowerCase());
+              if (term.length === 0) {
+                  $rows.show();
+                  return;
+              }
+          /**hide the not rellevant row**/
+              $rows.hide().filter(function () {
+                  return this.cells[index].textContent.toLowerCase().indexOf(term) > -1;
+              }).show();
+
+          };
         });
+
+
+      /* loading works list table ?????????????? */
+      var req = $.get('/worksList');
+        req.done(HandleServerResponse);
+
+
         function addwork()
         {
-          ''
+        
         }
 
- /**       $(function() {
-        $("#myTable").tablesorter();
-    });**/
+
+
+
   
         function myCreateFunction() {
           var workstable = document.getElementById("workesTable");
-          var row = table.insertRow(1);
-          var cell1 = row.insertCell(0);
-          var cell2 = row.insertCell(1);
-          var cell3 = row.insertCell(2);
-          var cell4 = row.insertCell(3);
-          var cell5 = row.insertCell(4);
-          var cell6 = row.insertCell(5);
-          var cell7 = row.insertCell(6);
+          var row = workstable.insertRow(1);
+          var cell = row.insertCell(0);
+          var cell1 = row.insertCell(1);
+          var cell2 = row.insertCell(2);
+          var cell3 = row.insertCell(3);
+          var cell4 = row.insertCell(4);
+          var cell5 = row.insertCell(5);
+          var cell6 = row.insertCell(6);
+          var cell7 = row.insertCell(7);
+          cell.innerHTML='5689';
           cell1.innerHTML = "56422";
           cell2.innerHTML = "Leeorr";
           cell3.innerHTML = "205740211";
@@ -118,9 +169,9 @@
           var rows = workstable.getElementsByTagName("tr");
           rows[1].onclick = function() {
             console.log(this);
-
         }
         
+      }
         function myDeleteFunction() {
           document.getElementById("workesTable").deleteRow(1);
         }
