@@ -25,65 +25,73 @@
   </nav>
 
 
-  <div class="transbox">
+    <div class="logincontainer">
   <div class="container-fluid">
      <!--login window -->
-    <div class="logincontainer">
+     <h1 align="center" style = "font-family:Comic Sans MS;">login</h1>
         <p>
-        <label for="uname"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="uname" required>
+        <label for="uname"><b>Username</b></label><br>
+        <input type="text" placeholder="Enter Username" name="uname" required><br>
     
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
-    
-        <button type="submit">Login</button>
+        <label for="psw"><b>Password</b></label><br>
+        <input type="password" placeholder="Enter Password" name="psw" required><br>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+        <button type="submit" onclick="login()">Login</button>
         <label> 
-       <input type="checkbox" checked="checked" name="remember"> Remember me
-       <span class="psw">&nbsp;&nbsp;&nbsp;&nbsp;Forgot <a href="#">password?</a></span>
+      
+       <span class="psw">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forgot <a href="#">password?</a></span>
         </label>
-         <br>
+         <br><br>
         <button onclick="document.getElementById('signUpWindows').style.display='block'" style="width:auto;">Sign Up</button>
         </div>
         <!--end login window -->
-
+        <br>
       </div> 
      </div>
      </p>
-  </div>
+  
     <!--sign up window -->
     <div id="signUpWindows" class="popWindow-background">
-            <span onclick="document.getElementById('signUpWindows').style.display='block'" class="close" title="Close popWindow">&times;</span>
+            
             <form class="popwindow-content" action="/action_page.php">
-              <div class="container">
-                <h1>Sign Up</h1>
+              <div class="container-fluid">
+                <span onclick="$('#signUpWindows').hide();" class="close" title="Close popWindow">&times;</span>
+                <h1 align="center" style = "font-family:Comic Sans MS;">Sign Up</h1>
                 <p>Please fill in this form to create an account.</p>
                 <hr>
-                <label for="email"><b>Email</b></label>
-                <input type="text" placeholder="Enter Email" name="email" required>
+                <label for="workerNum"><b>Enter worker number:</b></label><br>
+                <input type="text" placeholder="Enter worker number" name="email" required><br>
+
+                <label for="workerName"><b>Enter your name</b></label><br>
+                <input type="text" placeholder="Enter your name" name="psw" required><br>
+               
+                <label for="psw"><b>Password</b></label><br>
+                <input type="password" placeholder="Enter Password" name="psw" required><br>
         
-                <label for="psw"><b>Password</b></label>
-                <input type="password" placeholder="Enter Password" name="psw" required>
-        
-                <label for="psw-repeat"><b>Repeat Password</b></label>
-                <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
-        
-                <label>
-                  <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-                </label>
-        
-                <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
-        
+                <label for="psw-repeat"><b>Repeat Password</b></label><br>
+                <input type="password" placeholder="Repeat Password" name="psw-repeat" required><br>
+            
                 <div class="clearfix">
-                  <button type="button" onclick="document.getElementById('signUpWindows').style.display='none'" class="cancelbtn">Cancel</button>
-                  <button type="submit" class="signupbtn">Sign Up</button>
+                  <button type="submit" onclick="signUp()">Sign Up</button>
+                  <br>
                 </div>
+                <br>
               </div>
             </form>
           </div>
           <!--end sign up window -->
   
+
  <script>
- 
+
+function login(){
+
+}
+ function signUp(){
+    $('#signUpWindows').hide();
+    alert("Create a new account is complete, press OK to log on");
+    
+ }
  </script>
 
 </body>

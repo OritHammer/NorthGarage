@@ -101,15 +101,77 @@
                 </tr>
           </tbody>
         </table>
-        <button type="button" class="signupbtn" onclick="addwork()">add</button>
-        
-        <button onclick="myCreateFunction()">Create row</button>
-        <button onclick="myDeleteFunction()">Delete row</button>    
+        <div class="grid-container">
+            <div class="item1">  <button type="button" class="signupbtn" onclick="addwork()">Add Work</button></div>
+            <div class="item2"> <button onclick="myCreateFunction()">Create row</button></div>
+            <div class="item3"> <button onclick="myDeleteFunction()">Delete row</button></div>
+          </div>
+      
       </div> 
      </div>
      </p>
   </div>
   
+    <!--work details window -->
+    <div id="workDetails" class="popWindow-background">
+            
+        <form class="popwindow-content" action="/action_page.php">
+          <div class="container-fluid">
+            <span onclick="$('#workDetails').hide();" class="close" title="Close popWindow">&times;</span>
+            <h1 align="center" style = "font-family:Comic Sans MS;">work Details</h1>
+             <hr> 
+             <div class="grid-container">
+                <div class="item1"> <label for="ClientID"><b>Client ID:</b></label><br> 
+                                    <input class="detailsInput" type="text" name="ClientID" required><br>
+                                   </div>
+                <div class="item2"> </div>
+                <div class="item3">  <label for="status"><b>Status</b></label><br>
+                                    <input class="detailsInput" type="text" name="status" required><br>
+                                    </div>
+              </div>
+              
+              <div class="grid-container">
+                  <div class="item1"> <label for="CarNumber"><b>Car Number:</b></label><br>
+                                     <input class="detailsInput" type="text" name="CarNumber" required><br>
+                                     </div>
+                  <div class="item3">  <label for="CarType"><b>Car Type</b></label><br>
+                                       <input class="detailsInput" type="text" name="CarType" required><br>
+                                      </div>
+              </div>
+            
+              <div class="grid-container">
+                  <div class="item1"> <label for="workerNum"><b>Worker Number:</b></label><br>
+                                      <input class="detailsInput" type="text"name="workerNum" required><br>
+                                     </div>
+                  <div class="item3"> <label for="workerName"><b>Worker Name</b></label><br>
+                                      <input class="detailsInput" type="text" name="workerName" required><br> 
+                                      </div>
+              </div>
+              <div class="grid-container">
+                  <div class="item1">  <label for="ProblemDescription"><b>Problem Description:</b></label><br>
+                                        <input class="detailsInput" type="text"name="ProblemDescription" required><br>
+                                     </div>
+             </div>
+            <div class="grid-container">
+                <div class="item1"> <label for="TotalCost"><b>Total Cost $</b></label><br>
+                                    <input class="detailsInput" type="text" name="TotalCost" required><br>
+                                   </div>
+                <div class="item2"> </div>
+                <div class="item3"> </div>
+            </div>
+            <div class="grid-container">
+                <div class="item1"><button type="submit">Update</button></div>
+                <div class="item2"><button type="submit">Delete</button></div>
+                <div class="item3"> <button type="button" onclick="$('#workDetails').hide();" class="cancelbtn">Cancel</button></div>
+              </div>
+           <br>
+            </div>
+            <br>
+          </div>
+        </form>
+      </div>
+      <!--end work details window -->
+
      <script>
        /**serch by listener**/
        $(document).ready(function () {
@@ -134,9 +196,9 @@
 
 
       /* loading works list table ?????????????? */
-      var req = $.get('/worksList');
+/*      var req = $.get('/worksList');
         req.done(HandleServerResponse);
-
+*/
 
         function addwork()
         {
@@ -158,6 +220,7 @@
           var cell5 = row.insertCell(5);
           var cell6 = row.insertCell(6);
           var cell7 = row.insertCell(7);
+          cell.scope="row";   
           cell.innerHTML='5689';
           cell1.innerHTML = "56422";
           cell2.innerHTML = "Leeorr";
@@ -168,9 +231,10 @@
           cell7.innerHTML = "4500";
           var rows = workstable.getElementsByTagName("tr");
           rows[1].onclick = function() {
-            console.log(this);
+            document.getElementById('workDetails').style.display='block';
+          
         }
-        
+
       }
         function myDeleteFunction() {
           document.getElementById("workesTable").deleteRow(1);
