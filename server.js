@@ -33,49 +33,53 @@ var server=app.listen(3000, ()=> {console.log("server in ...")});
           console.log("customers collection created!");
           //  db.close();
         }); 
-  /*
-//adding works to works collection
-    db.works.insert({
-     OrderNumber: "46565465",
-     WorkerNumber: "965",
-     WorkerName: "Mark",
-     ClientID: "313124823",
-     CarID: "95-896-78",
-    CerType:"Toyota",
-     Status:  "Pending",
-     problemDiscription: "Driver Seat Recline Position Restraints Sensor",
-     TotalCost: "450$"
-    });
-  
-    dataBaseObject.works.insert({
-      'OrderNumber': '56468458',
-      'WorkerNumber': 653,
-      'WorkerName': 'Jacob',
-      'ClientID': 313124823,
-      'CarID': '95-896-78',
-     'CerType':'Toyota',
-      'Status': 'paid up',
-      'problemDiscription': 'Throttle Actuator Control Lamp Control Circuit',
-      'TotalCost$':600
-     });
-     dataBaseObject.works.insert({
-      'OrderNumber': '56468458',
-      'WorkerNumber': 653,
-      'WorkerName': 'Jacob',
-      'ClientID': 286532541,
-      'CarID': '35-625-88',
-      'CerType':'Nisan',
-      'Status': 'paid up',
-      'problemDiscription': 'Throttle Actuator Control Lamp Control Circuit',
-      'TotalCost$':600
-     });
 /*
-//adding employees to employees collection
-dataBaseObject.works.insert({_id: 653,'WorkerName': 'Jacob', 'password': 1234})
-dataBaseObject.works.insert({_id: 965,'WorkerName': 'Mark', 'password': 12345})
-*/
+//adding works to works collection        
+var work1 = {
+  _id: "000001",
+  WorkerNumber: "965",
+  WorkerName: "Mark",
+  ClientID: "313124823",
+  CarID: "95-896-78",
+ CerType:"Toyota",
+  Status:  "Pending",
+  problemDiscription: "Driver Seat Recline Position Restraints Sensor",
+  TotalCost: "450$"
+ }; 
 
+    dataBaseObject.collection("works").insertOne(work1);
+
+    var work2={
+      _id: '000002',
+      WorkerNumber: "653",
+      WorkerName: 'Jacob',
+      ClientID: "313124823",
+      CarID: '95-896-78',
+      CerType:'Toyota',
+      Status: 'paid up',
+      problemDiscription: 'Throttle Actuator Control Lamp Control Circuit',
+      TotalCost:"600$"
+     }; 
+        dataBaseObject.collection("works").insertOne(work2);
+    var work3={
+      _id:'000003',
+      WorkerNumber: "653",
+      WorkerName: 'Jacob',
+      ClientID: "286532541",
+      CarID: '35-625-88',
+      CerType:'Nisan',
+      Status: 'paid up',
+      problemDiscription: 'Throttle Actuator Control Lamp Control Circuit',
+      TotalCost:"600$"
+     }
+  
+     dataBaseObject.collection("works").insertOne(work3);
+
+//adding employees to employees collection
+dataBaseObject.collection("employees").insertOne({_id: "653", WorkerName: 'Jacob', password: "12345" , mail: 'Jacob@gmail.com', phone:'0523459785' });
+dataBaseObject.collection("employees").insertOne({_id: "965", WorkerName: 'Mark', password: "12345",mail: 'Mark@gmail.com', phone:'0523446885' });
 db.close();
+*/
 });
 
  
