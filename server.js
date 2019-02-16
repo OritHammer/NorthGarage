@@ -33,7 +33,7 @@ var server=app.listen(3000, ()=> {console.log("server in ...")});
           console.log("customers collection created!");
           //  db.close();
         }); 
-
+  /*
 //adding works to works collection
     db.works.insert({
      OrderNumber: "46565465",
@@ -46,7 +46,7 @@ var server=app.listen(3000, ()=> {console.log("server in ...")});
      problemDiscription: "Driver Seat Recline Position Restraints Sensor",
      TotalCost: "450$"
     });
-    /*
+  
     dataBaseObject.works.insert({
       'OrderNumber': '56468458',
       'WorkerNumber': 653,
