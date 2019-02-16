@@ -9,13 +9,16 @@
     var router = express.Router();
     //client will not have permission to client folder only to static
     app.use('/static',express.static(path.join(__dirname,'client')));
+
+    var server=app.listen(3000, ()=> {console.log("server in ...")});
   
+
+  /** mongo connect **/
     MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         if (err) throw err;
         var dataBaseObject = db.db("projDB");
 
 //create collections
-var server=app.listen(3000, ()=> {console.log("server in ...")});
         // adding employees collection - table
         dataBaseObject.createCollection("employees",function(err,res){
           console.log("employees collection created");
@@ -112,8 +115,26 @@ router.get('/worksList', function(req, res) {
   });
 });
 
-
-
+/**
+ * 
+ * server getting /login req
+ * created by leeorr
+ * handle request from newlogin page 
+ */
+app.post('/login' , function(req,res){
+  var data = req.body;
+  var workerInfo =  employeeLogin(data.WorkerName,data.password) ;
+  var found = {'success': false,
+               'message': 'User Name Or Password Not Valid',
+               'worker' : workerInfo
+              };
+ if (workerInfo){
+   found.success = true;
+   found.message = 'welcome';
+ }
+ 
+res.send(found);
+});
 
 /** searchEmployee
      * by: leeorr h
@@ -134,18 +155,18 @@ router.get('/worksList', function(req, res) {
      * by: leeorr h
      * use : check empId and Password, if there is a match we'll continue
      *  */ 
-    function employeeLogin(empIDIn,passwordIn){
-      if( dataBaseObject.employees.find({empID : { $eq:empIDIn},
-                                         password:{$eq:passwordIn}
-                                        }))
+    function employeeLogin(workerNameIn,passwordIn){
+      var workerData =  dataBaseObject.collection("employees").find({workerNameIn : { $eq:WorkerName},
+        password:{$eq:passwordIn}
+       });
+      if(workerData != null)
       {
-        // need to continue
+        console.log("worker found");
+        return workerData; 
       }
       else {
           alert("please make sure you insert the correct empID and password");
       }
-
-
     }
 
 

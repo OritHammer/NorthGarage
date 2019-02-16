@@ -31,10 +31,10 @@
      <h1 align="center" style = "font-family:Comic Sans MS;">login</h1>
         <p>
         <label for="uname"><b>Username</b></label><br>
-        <input type="text" placeholder="Enter Username" name="uname" required><br>
+        <input id="userName" type="text" placeholder="Enter Username" name="uname" required><br>
     
         <label for="psw"><b>Password</b></label><br>
-        <input type="password" placeholder="Enter Password" name="psw" required><br>
+        <input id="userPassword" type="password" placeholder="Enter Password" name="psw" required><br>
         <input type="checkbox" checked="checked" name="remember"> Remember me
         <button type="submit" onclick="login()">Login</button>
         <label> 
@@ -84,8 +84,26 @@
 
  <script>
 
+function handleServerResponse(res){
+//res.success
+alert(res.message);
+}
+/*
+*login function
+* created by leeorr
+* send data when login button clicked
+*/
 function login(){
+  var name= $('#userName').val();
+  var password= $('#userPassword').val();
 
+  var json = {
+    'WorkerName' : name,
+    'password' : password
+  };
+
+  var req = $.post('/login',json); //sendeing post request to the server
+  req.done(handleServerResponse);
 }
  function signUp(){
     $('#signUpWindows').hide();
