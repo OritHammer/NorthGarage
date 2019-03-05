@@ -60,16 +60,16 @@
                 <p>Please fill in this form to create an account.</p>
                 <hr>
                 <label for="workerNum"><b>Enter worker number:</b></label><br>
-                <input type="text" placeholder="Enter worker number" name="email" required><br>
+                <input id="workerNum" type="text" placeholder="Enter worker number" name="workerNum" required><br>
 
                 <label for="workerName"><b>Enter your name</b></label><br>
-                <input type="text" placeholder="Enter your name" name="psw" required><br>
+                <input id="workerName" type="text" placeholder="Enter your name" name="workerName" required><br>
                
                 <label for="psw"><b>Password</b></label><br>
-                <input type="password" placeholder="Enter Password" name="psw" required><br>
+                <input id="password" type="password" placeholder="Enter Password" name="psw" required><br>
         
                 <label for="psw-repeat"><b>Repeat Password</b></label><br>
-                <input type="password" placeholder="Repeat Password" name="psw-repeat" required><br>
+                <input id="psw_repeat" type="password" placeholder="Repeat Password" name="psw-repeat" required><br>
             
                 <div class="clearfix">
                   <button type="submit" onclick="signUp()">Sign Up</button>
@@ -86,7 +86,17 @@
 
 function handleServerResponse(res){
 //res.success
+switch(res.message){
+case "login":
+  window.location.href = "http://localhost:3000/homepage";
 alert(res.message);
+break;
+case "signUp":
+if(res.success)
+$('#signUpWindows').hide();
+    var message="your userName is: "+workerNum+" your password is "+Password+" Enter OK to log in";
+    alert(message);
+}
 }
 /*
 *login function
@@ -102,13 +112,25 @@ function login(){
     'password' : password
   };
 
-  var req = $.post('/login',json); //sendeing post request to the server
+  var req = $.post('/login',json); //sendeing post request to the server for login
   req.done(handleServerResponse);
 }
+
  function signUp(){
-    $('#signUpWindows').hide();
-    alert("Create a new account is complete, press OK to log on");
-    
+  var workerNum= $('#workerNum').val();
+  var workerName= $('#workerName').val();
+  var password= $('#password').val();
+if (!password == $('#psw_repeat').val())
+    alert("please repeat the password again");
+else{
+  var json = {
+    'workerNum': workerNum,
+    'workerName' : workerName,
+    'password' : password
+  };
+  var req = $.post('/signUp',json); //sendeing post request to the server for signUp
+  req.done(handleServerResponse);
+  }  
  }
  </script>
 
