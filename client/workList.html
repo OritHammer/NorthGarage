@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="/static/landPageStyle(login).css"> 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
- 
 </head>
  <!--*********************tool bar ***********************-->
 <body>
@@ -34,7 +33,7 @@
     <!--website body -->
      <div class="custom-select" style="width:200px;">
        <p>search by : 
-          <select id="colName">
+          <select id="colNameSearch">
             <option value="Order Number">Order Number</th>
             <option value="Worker Number">Worker Number</option>
             <option value="Worker Name">Worker Name</option>
@@ -45,17 +44,17 @@
             <option value="Total Cost $">Total Cost $</option>
           </select>
         </div>
-      Search : <input id="myInput" type="text" name="search" style="width:200px;"><br>
+      Search : <input id="searchByInput" type="text" name="search" style="width:200px;"><br>
       <div class="custom-select" style="width:200px;">
           Sort By : 
-             <select>
+             <select id="colNameSort">
                <option value="WorkerNum">Worker Number</option>
                <option value="CarID">Car ID</option>
                <option value="Status">Status</option>
              </select>
            </div>
     
-      <table  id="workesTable"class="table table-hover" class="tablesorter">
+      <table  id="worksTable"class="table table-hover" class="tablesorter">
           <thead>
             <tr>
               <th scope="col">Order Number</th>
@@ -63,46 +62,46 @@
               <th scope="col2">Worker Name</th>
               <th scope="col3">Client ID</th>
               <th scope="col4">Car ID</th>
-              <th scope="col5">Cer Type</th>
+              <th scope="col5">Car Type</th>
               <th scope="col6">Status</th>
               <th scope="col7">Total Cost $</th>
             </tr>
           </thead>
           <tbody id="workesList">
+            <tr>
+                <th scope="row">4656</th>
+                <td>31312482</td>
+                <td>Mark</td>
+                <td>client id 1</td>
+                <td>car id 1</td>
+                <td>car type 1</td>
+                <td>status 1</td>
+                <td>total cost 50</td>
+              </tr>
               <tr>
-                  <th scope="row">4656</th>
-                  <td>31312482</td>
-                  <td>Mark</td>
-                  <td>client id 1</td>
-                  <td>car id 1</td>
-                  <td>car type 1</td>
-                  <td>status 1</td>
-                  <td>total cost 50</td>
-                </tr>
-                <tr>
-                  <th scope="row">4657</th>
-                  <td>14412444</td>
-                  <td>Jacob</td>
-                  <td>client id 2</td>
-                  <td>car id 2</td>
-                  <td>car type 2</td>
-                  <td>status 2</td>
-                  <td>total cost 100</td>
-                </tr>
-                <tr>
-                  <th scope="row" >4658</th>
-                  <td>12111123</td>
-                  <td>Larry the Bird</td>
-                  <td>client id 3</td>
-                  <td>car id 3</td>
-                  <td>car type 3</td>
-                  <td>status 3</td>
-                  <td>total cost 122</td>
-                </tr>
-          </tbody>
+                <th scope="row">4657</th>
+                <td>14412444</td>
+                <td>Jacob</td>
+                <td>client id 2</td>
+                <td>car id 2</td>
+                <td>car type 2</td>
+                <td>status 2</td>
+                <td>total cost 100</td>
+              </tr>
+              <tr>
+                <th scope="row" >4658</th>
+                <td>12111123</td>
+                <td>Larry the Bird</td>
+                <td>client id 3</td>
+                <td>car id 3</td>
+                <td>car type 3</td>
+                <td>status 3</td>
+                <td>total cost 122</td>
+              </tr>
+        </tbody>
         </table>
         <div class="grid-container">
-            <div class="item1">  <button type="button" class="signupbtn" onclick="addwork()">Add Work</button></div>
+            <div class="item1">  <button type="button" class="signupbtn" onclick="sortTable()">Add Work</button></div>
             <div class="item2"> <button onclick="myCreateFunction()">Create row</button></div>
             <div class="item3"> <button onclick="myDeleteFunction()">Delete row</button></div>
           </div>
@@ -173,11 +172,29 @@
       <!--end work details window -->
 
      <script>
+
+
+
+function handleServerResponse(res){
+  switch(res.message){
+case "worksList":
+    createRow(res.obj);
+  }
+}
+
+
+function createRow(objectArray){
+objectArray.forEach(element => {
+  myCreateFunction(element);
+  }); 
+}
        /**serch by listener**/
        $(document).ready(function () {
-          var $s = $('#colName').on('change', filter);
-          var $i = $("#myInput").on('keyup', filter);
-          var $rows = $("#workesTable tbody > tr");
+        var req = $.post('/worksList'); //sendeing post request to the server for login
+        req.done(handleServerResponse);
+          var $s = $('#colNameSearch').on('change', filter);
+          var $i = $("#searchByInput").on('keyup', filter);
+          var $rows = $("#worksTable tbody > tr");
     
           function filter() {
               var index = $s.prop('selectedIndex');
@@ -206,11 +223,9 @@
         }
 
 
-
-
-  
-        function myCreateFunction() {
-          var workstable = document.getElementById("workesTable");
+        
+        function myCreateFunction(obj) {
+          var workstable = document.getElementById("worksTable");
           var row = workstable.insertRow(1);
           var cell = row.insertCell(0);
           var cell1 = row.insertCell(1);
@@ -220,14 +235,23 @@
           var cell5 = row.insertCell(5);
           var cell6 = row.insertCell(6);
           var cell7 = row.insertCell(7);
-          cell.innerHTML='<th scope="row">5689</th>';
+          cell.innerHTML=obj._id;
+          cell1.innerHTML = obj.WorkerNumber;
+          cell2.innerHTML = obj.WorkerName;
+          cell3.innerHTML = obj.ClientID;
+          cell4.innerHTML = obj.CarID;
+          cell5.innerHTML = obj.CarType;
+          cell6.innerHTML = obj.Status ;
+          cell7.innerHTML = obj.TotalCost;
+
+         /* cell.innerHTML='<th scope="row">5689</th>';
           cell1.innerHTML = "56422";
           cell2.innerHTML = "Leeorr";
           cell3.innerHTML = "205740211";
           cell4.innerHTML = "49-785-98";
           cell5.innerHTML = "toy";
           cell6.innerHTML = "on work";
-          cell7.innerHTML = "4500";
+          cell7.innerHTML = "4500";*/
           var rows = workstable.getElementsByTagName("tr");
           rows[1].onclick = function() {
             document.getElementById('workDetails').style.display='block';
@@ -236,11 +260,45 @@
 
       }
         function myDeleteFunction() {
-          document.getElementById("workesTable").deleteRow(1);
+          document.getElementById("worksTable").deleteRow(1);
         }
-        </script>
-
-
+       
+ //var sortBy = $('#colNameSort').on('change', sortTable);
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("worksTable");
+  switching = true;
+  /*Make a loop that will continue until
+  no switching has been done:*/
+  while (switching) {
+    //start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /*Loop through all table rows (except the
+    first, which contains table headers):*/
+    for (i = 1; i < (rows.length - 1); i++) {
+      //start by saying there should be no switching:
+      shouldSwitch = false;
+      /*Get the two elements you want to compare,
+      one from current row and one from the next:*/
+      x = rows[i].getElementsByTagName("TD")[1];
+      y = rows[i + 1].getElementsByTagName("TD")[1];
+      //check if the two rows should switch place:
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        //if so, mark as a switch and break the loop:
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /*If a switch has been marked, make the switch
+      and mark that a switch has been done:*/
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
+}
+</script>
 
 </body>
 

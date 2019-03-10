@@ -11,6 +11,7 @@
     app.use('/static',express.static(path.join(__dirname,'client')));
 
     var server=app.listen(3000, ()=> {console.log("server in ...")});
+    var workNumber = "000000" ;
     // success=false;
 
 //   /** mongo connect **/
@@ -153,10 +154,12 @@ app.post('/signUp' , function(req,res){
               db.close();
            }     
     });
-  });
-  
+  }); 
 });
 
+/**
+ * returning works List
+ */
 app.post('/worksList' , function(req,res){
   var resultArr = [] ;
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
@@ -168,13 +171,15 @@ app.post('/worksList' , function(req,res){
       if(doc === null) callback(false,res,null,'worksList');
       resultArr.push(doc);
      }, function(){
+      callback(true,res,resultArr,'worksList');
        db.close();
      });
-     callback(true,res,resultArr,'worksList');
   });  
 });
 
-
+/**
+ * returning customer list
+ */
 app.post('/customersList' , function(req,res){
   var resultArr = [] ;
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
@@ -191,6 +196,39 @@ app.post('/customersList' , function(req,res){
      callback(true,res,resultArr,'customersList');
   });  
 });
+
+/**
+ * Adding new work 
+ */
+app.post('/addWork' , function(req,res){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+    success=false;
+    dataBaseObject.collection("employees").insertOne({_id:workNumber+1, 
+    WorkerNumber: req.body.workerNumber, WorkerName: req.body.workerName,
+    ClientID: req.body.clientID, CarID: req.body.carID ,CarType : req.body.carType,
+    Status : req.body.status , problemDiscription: req.body.problemDiscription , TotalCost: TotalCost
+     });
+    console.log("work added"); 
+    db.close();
+    var workDitails = {
+      'workId':workNumber, 
+      'WorkerNumber': req.body.workerNumber,
+      'WorkerName': req.body.workerName,
+      'ClientID': req.body.clientID,
+      'CarID': req.body.carID ,
+      'CarType' : req.body.carType,
+      'Status': req.body.status ,
+      'problemDiscription': req.body.problemDiscription ,
+      'TotalCost': TotalCost
+       };
+     callback(true, res,workDitails,'addWork');          
+  });
+});
+
+
+
 
 
   
