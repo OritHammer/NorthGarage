@@ -96,11 +96,18 @@ if(res.success){
 }
 break;
 case "signUp":
-if(res.success)
-$('#signUpWindows').hide();
-    var message="your userName is: "+workerNum+" your password is "+Password+" Enter OK to log in";
+if(res.success) {
+    var message="your userName is: "+res.obj.workerNumber+" your password is "+res.obj.password+" Enter OK to log in";
     alert(message);
 }
+else {
+  var message = "You allredy signed up try to login";
+  alert(message);
+}
+$('#signUpWindows').hide();
+window.location.href = "http://localhost:3000" ;
+}
+
 }
 /*
 *login function
@@ -108,11 +115,11 @@ $('#signUpWindows').hide();
 * send data when login button clicked
 */
 function login(){
-  var name= $('#userName').val();
+  var workerNum= $('#userName').val();
   var password= $('#userPassword').val();
 
   var json = {
-    'WorkerName' : name,
+    'WorkerNum' : workerNum,
     'password' : password
   };
 
