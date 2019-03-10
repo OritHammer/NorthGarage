@@ -88,8 +88,12 @@ function handleServerResponse(res){
 //res.success
 switch(res.message){
 case "login":
+if(res.success){
   window.location.href = "http://localhost:3000/homepage";
-alert(res.message);
+  alert(" Hello "+res.obj); // To change name on navbar
+}else {
+  alert(" User Name Or Password Not Valid");
+}
 break;
 case "signUp":
 if(res.success)
@@ -120,7 +124,7 @@ function login(){
   var workerNum= $('#workerNum').val();
   var workerName= $('#workerName').val();
   var password= $('#password').val();
-if (!password == $('#psw_repeat').val())
+if (!(password === $('#psw_repeat').val()))
     alert("please repeat the password again");
 else{
   var json = {
