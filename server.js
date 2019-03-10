@@ -135,7 +135,7 @@ app.post('/signUp' , function(req,res){
        success=false;
      dataBaseObject.collection('employees').findOne({ _id: req.body.workerNum},
        function(err, user) {
-             if(user ===null){
+             if(user === null){
                 dataBaseObject.collection("employees").insertOne({_id:req.body.workerNum, 
                     WorkerName: req.body.workerName,
                     password: req.body.password});
@@ -157,6 +157,40 @@ app.post('/signUp' , function(req,res){
   
 });
 
+app.post('/worksList' , function(req,res){
+  var resultArr = [] ;
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+     var cursor = dataBaseObject.collection('works').find();
+     cursor.forEach(function(doc,err){
+      if (err) throw err;
+      if(doc === null) callback(false,res,null,'worksList');
+      resultArr.push(doc);
+     }, function(){
+       db.close();
+     });
+     callback(true,res,resultArr,'worksList');
+  });  
+});
+
+
+app.post('/customersList' , function(req,res){
+  var resultArr = [] ;
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+     var cursor = dataBaseObject.collection('customers').find();
+     cursor.forEach(function(doc,err){
+      if (err) throw err;
+      if(doc === null) callback(false,res,null,'customersList');
+      resultArr.push(doc);
+     }, function(){
+       db.close();
+     });
+     callback(true,res,resultArr,'customersList');
+  });  
+});
 
 
   
