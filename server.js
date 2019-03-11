@@ -227,7 +227,19 @@ app.post('/addWork' , function(req,res){
   });
 });
 
-
+app.post('/showWorkDetails' , function(req,res){
+  var result;
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+     dataBaseObject.collection('works').findOne({_id: req.body._id},
+      function(err, work) {
+        if (result===null)
+          callback(false,res,null,'showWorkDetails');
+        else callback(true,res,work,'showWorkDetails');
+    });
+  });
+});
 
 
 
