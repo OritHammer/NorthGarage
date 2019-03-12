@@ -220,7 +220,10 @@ function handleServerResponse(res){
       myCreateFunction(res.obj);
       $('#workDetails').hide();
       break;
-
+      case "upDateWork":
+      alert("work upDated successfully");
+      $('#workDetails').hide();
+      break;
   }
 }
 function indexOfStatusOption(status){
@@ -259,7 +262,7 @@ function indexOfStatusOption(status){
         });
 
 
-      function addwork(){
+      function addwork(){//open add work form
         document.getElementById('okBtn').style.display='block';
         $('#updateBtn').hide();
           document.getElementById('workDetails').style.display='block';
@@ -280,13 +283,13 @@ function indexOfStatusOption(status){
         document.getElementsByName("workerNum")[0].readOnly = true; 
         }
 
-      function createRow(objectArray){
+      function createRow(objectArray){//create few row in worksTable
          objectArray.forEach(element => {
           myCreateFunction(element);
           }); 
          }
         
-      function myCreateFunction(obj) {
+      function myCreateFunction(obj) {//create a row in works table
           var workstable = document.getElementById("worksTable");
           var row = workstable.insertRow(1);
           row.id=""+obj._id;
@@ -313,26 +316,40 @@ function indexOfStatusOption(status){
             req.done(handleServerResponse);
           }
       }
+      function upDateWorkDetails(){//update work in DataBase and work Table
+        var upDateWork = gettingDataFromElements();
+        var req = $.post('/upDateWork',upDateWork); //sendeing post request to the server for workslist
+          req.done(handleServerResponse);
 
+
+
+      }
       
 
       function myDeleteFunction() {
           document.getElementById("worksTable").deleteRow(1);
         }
-      
+        function gettingDataFromElements(){
+        var work = {
+          '_id': document.getElementsByName("orderNum")[0].value,
+            'clientID': document.getElementsByName("ClientID")[0].value,
+            'status': document.getElementsByName("status")[0].value,
+            'carID': document.getElementsByName("CarNumber")[0].value, 
+            'carType': document.getElementsByName("CarType")[0].value,
+            'workerNumber': document.getElementsByName("workerNum")[0].value,
+            'workerName': document.getElementsByName("workerName")[0].value, 
+            'problemDiscription': document.getElementsByName("ProblemDescription")[0].value,
+            'TotalCost': document.getElementsByName("TotalCost")[0].value
+        };
+        return work; 
+        }
+
       function okAddWork(){
-        var clientID=document.getElementsByName("ClientID")[0].value;
-        var status=document.getElementsByName("status")[0].value;
-        var carID= document.getElementsByName("CarNumber")[0].value;
-        var carType =document.getElementsByName("CarType")[0].value;
-        var workerNum= document.getElementsByName("workerNum")[0].value;
-        var workerName=document.getElementsByName("workerName")[0].value;
-        var problemDiscription=document.getElementsByName("ProblemDescription")[0].value;
-        var TotalCost=document.getElementsByName("TotalCost")[0].value;
-        var orderNum=document.getElementsByName("orderNum")[0].value;
+        newWork = gettingDataFromElements();
         workNumber++;
-        if(!(TotalCost==""||clientID==""||status==""||carID==""||carType==""||problemDiscription=="")){
-          var newWork = {
+        if(!(newWork.TotalCost==""||newWork.clientID==""||newWork.status==""
+              ||newWork.carID==""||newWork.carType==""||newWork.problemDiscription=="")){
+          /*var newWork = {
             '_id': orderNum,
             'clientID' :clientID,
             'status' : status,
@@ -342,7 +359,7 @@ function indexOfStatusOption(status){
             'workerName' : workerName, 
             'problemDiscription' : problemDiscription,
             'TotalCost' : TotalCost
-          };
+          };*/
           var req = $.post('/addWork',newWork); //sendeing post request to the server for workslist
           req.done(handleServerResponse);
         }

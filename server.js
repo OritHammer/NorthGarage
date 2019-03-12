@@ -170,6 +170,25 @@ app.post('/showWorkDetails' , function(req,res){
   });
 });
 
+app.post('/upDateWork' , function(req,res){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+    success=false;
+    var upDateByID = { _id:req.body._id };
+    var newvalues = { $set: { 
+    WorkerNumber: req.body.workerNumber, WorkerName: req.body.workerName,
+    ClientID: req.body.clientID, CarID: req.body.carID ,CarType : req.body.carType,
+    Status : req.body.status , problemDiscription: req.body.problemDiscription , 
+    TotalCost: req.body.TotalCost
+     } };
+    dataBaseObject.collection("works").updateOne(upDateByID,newvalues);
+    console.log("work upDated"); 
+    db.close();
+    callback(true,  res,"success",'upDateWork');
+  });
+});
+
 app.post('/getEmpDetails' , function(req,res){
   callback(true,res,employesDetails,'getEmpDetails');
 });
