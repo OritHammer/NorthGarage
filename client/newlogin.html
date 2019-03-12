@@ -53,7 +53,7 @@
     <!--sign up window -->
     <div id="signUpWindows" class="popWindow-background">
             
-            <form class="popwindow-content" action="/action_page.php">
+            <form class="popwindow-content">
               <div class="container-fluid">
                 <span onclick="$('#signUpWindows').hide();" class="close" title="Close popWindow">&times;</span>
                 <h1 align="center" style = "font-family:Comic Sans MS;">Sign Up</h1>
@@ -86,6 +86,7 @@
   
 
  <script>
+var workNumber = 400000 ;
 
 function handleServerResponse(res){
 //res.success
@@ -134,17 +135,20 @@ function login(){
   var workerNum= $('#workerNum').val();
   var workerName= $('#workerName').val();
   var password= $('#password').val();
-if (!(password === $('#psw_repeat').val()))
-    alert("please repeat the password again");
-else{
-  var json = {
-    'workerNum': workerNum,
-    'workerName' : workerName,
-    'password' : password
-  };
-  var req = $.post('/signUp',json); //sendeing post request to the server for signUp
-  req.done(handleServerResponse);
-  }  
+  var repeatPassword=$('#psw_repeat').val();
+    if(!(workerName==""||workerNum==""||password==""||repeatPassword=="")){    
+      if (!(password ===repeatPassword))
+          alert("please repeat the password again");
+      else{
+        var json = {
+          'workerNum': workerNum,
+          'workerName' : workerName,
+          'password' : password
+        };
+        var req = $.post('/signUp',json); //sendeing post request to the server for signUp
+        req.done(handleServerResponse);
+      } 
+    }
  }
  </script>
 

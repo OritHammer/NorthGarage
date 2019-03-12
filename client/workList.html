@@ -114,22 +114,34 @@
     <!--work details window -->
     <div id="workDetails" class="popWindow-background">
             
-        <form class="popwindow-content" action="/action_page.php">
+        <form class="popwindow-content">
           <div class="container-fluid">
             <span onclick="$('#workDetails').hide();" class="close" title="Close popWindow">&times;</span>
             <h1 align="center" style = "font-family:Comic Sans MS;">work Details</h1>
-             <hr> 
-             <label for="OrderNumber"><b>Order Number:</b></label><label id='orderNumber'> </label>
+             <hr>  
+             <div class="grid-container">
+                <div class="item1"> <label for="OrderNumber"><b>Order Number:</b></label><br>
+                                    <input width='30px'type="text" name="orderNum" disabled><br></div>                 
+                <div class="item2"> </div>
+                <div class="item3"> <label for="TotalCost"><b>Total Cost $</b></label><br>
+                                    <input class="detailsInput" type="text" name="TotalCost" required><br></div>
+            </div>
              <div class="grid-container">
                 <div class="item1"> <label for="ClientID"><b>Client ID:</b></label><br> 
                                     <input class="detailsInput" type="text" name="ClientID" required><br>
                                    </div>
-                <div class="item2"> </div>
-                <div class="item3">  <label for="status"><b>Status</b></label><br>
-                                    <input class="detailsInput" type="text" name="status" required><br>
+                <div class="item2"></div>
+                <div class="item3"><label for="status"><b>Status</b></label><br>
+                                    <select class="detailsCombo" type="text" name="status" required>
+                                        <option value="Pending">Pending</option>
+                                        <option value="on work">on work</option>
+                                        <option value="finished">finished</option>
+                                        <option value="paid up">paid up</option>
+                                        
+                                    </select>
+                                        <br>
                                     </div>
               </div>
-              
               <div class="grid-container">
                   <div class="item1"> <label for="CarNumber"><b>Car Number:</b></label><br>
                                      <input class="detailsInput" type="text" name="CarNumber" required><br>
@@ -153,56 +165,79 @@
                                      </div>
              </div>
             <div class="grid-container">
-                <div class="item1"> <label for="TotalCost"><b>Total Cost $</b></label><br>
-                                    <input class="detailsInput" type="text" name="TotalCost" required><br>
-                                   </div>
-                <div class="item2"> </div>
-                <div class="item3"> </div>
-            </div>
-            <div class="grid-container">
-                <div class="item1"><button type="submit">Update</button></div>
+                <div class="item1"><button id='okBtn'type="button" onclick="okAddWork()">ok</button>
+                                    <button id='updateBtn'type="button" onclick="upDateWorkDetails()">Update</button></div>
                 <div class="item2"><button id="del" type="submit">Delete</button></div>
-                <div class="item3"> <button type="button" onclick="$('#workDetails').hide();" class="cancelbtn">Cancel</button></div>
+                <div class="item3"> <button type="button" onclick="cancelClicked()" class="cancelbtn">Cancel</button></div>
               </div>
            <br>
             </div>
             <br>
-          </div>
         </form>
       </div>
       <!--end work details window -->
 
      <script>
 
-
-
+var empDetails ;
+var workNumber = 400000 ;
 function handleServerResponse(res){
   switch(res.message){
     case "worksList":
         createRow(res.obj);
+      break;
+    case "getEmpDetails":
+      if(res.success) {
+        empDetails=res.obj;
+      }
       break;
     case "showWorkDetails":
       if(res.success) {
         //open window and show details
         document.getElementById('workDetails').style.display='block';
         document.getElementById('del').style.display='block';
-        alert(res)
+        $('#okBtn').hide();
+        document.getElementById('updateBtn').style.display='block';
+        //setting data on relevant fildes      
+        document.getElementsByName("orderNum")[0].value = res.obj._id;
+        document.getElementsByName("orderNum")[0].readOnly = true; 
+        document.getElementsByName("ClientID")[0].value = res.obj.ClientID; 
+        document.getElementsByName("ClientID")[0].readOnly = true; 
+        document.getElementsByName('status')[0].selectedIndex=indexOfStatusOption(res.obj.Status);
+        document.getElementsByName("CarNumber")[0].value = res.obj.CarID; 
+        document.getElementsByName("CarNumber")[0].readOnly = true; 
+        document.getElementsByName("CarType")[0].value = res.obj.CarType; 
+        document.getElementsByName("workerNum")[0].value = res.obj.WorkerNumber;
+        document.getElementsByName("workerNum")[0].readOnly = true;
+        document.getElementsByName("workerName")[0].value = res.obj.WorkerName; 
+        document.getElementsByName("workerName")[0].readOnly = true;
+        document.getElementsByName("ProblemDescription")[0].value = res.obj.problemDiscription;
+        document.getElementsByName("TotalCost")[0].value = res.obj.TotalCost;
       }
       else alert("somting happend, try again later");
       break; 
+      case "addWork":
+      myCreateFunction(res.obj);
+      $('#workDetails').hide();
+      break;
 
   }
 }
-
-
-function createRow(objectArray){
-objectArray.forEach(element => {
-  myCreateFunction(element);
-  }); 
+function indexOfStatusOption(status){
+  switch(status){
+    case 'Pending': return 0;
+    case 'on work': return 1;
+    case 'finished': return 2;
+    case 'paid up': return 3;
+    }
 }
+
+
        /**serch by listener**/
        $(document).ready(function () {
-        var req = $.post('/worksList'); //sendeing post request to the server for login
+        var req = $.post('/worksList'); //sendeing post request to the server for workslist
+        req.done(handleServerResponse);
+        req = $.post('/getEmpDetails'); //sendeing post request to the server for employee details
         req.done(handleServerResponse);
           var $s = $('#colNameSearch').on('change', filter);
           var $i = $("#searchByInput").on('keyup', filter);
@@ -224,21 +259,34 @@ objectArray.forEach(element => {
         });
 
 
-      /* loading works list table ?????????????? */
-/*      var req = $.get('/worksList');
-        req.done(HandleServerResponse);
-*/
-
-        function addwork()
-        {
+      function addwork(){
+        document.getElementById('okBtn').style.display='block';
+        $('#updateBtn').hide();
           document.getElementById('workDetails').style.display='block';
           $('#del').hide();
-
+        document.getElementsByName("ProblemDescription")[0].value = ""; 
+        document.getElementsByName("TotalCost")[0].value = "";
+        document.getElementsByName("orderNum")[0].value = workNumber + 1;
+        document.getElementsByName("orderNum")[0].readOnly = false; 
+        document.getElementsByName("ClientID")[0].value = ""; 
+        document.getElementsByName("ClientID")[0].readOnly = false; 
+        document.getElementsByName("status")[0].value = ""; 
+        document.getElementsByName("CarNumber")[0].value = ""; 
+        document.getElementsByName("CarNumber")[0].readOnly = false; 
+        document.getElementsByName("CarType")[0].value = ""; 
+        document.getElementsByName("workerNum")[0].value = empDetails._id;
+        document.getElementsByName("workerName")[0].value = empDetails.WorkerName; 
+        document.getElementsByName("workerName")[0].readOnly = true; 
+        document.getElementsByName("workerNum")[0].readOnly = true; 
         }
 
-
+      function createRow(objectArray){
+         objectArray.forEach(element => {
+          myCreateFunction(element);
+          }); 
+         }
         
-        function myCreateFunction(obj) {
+      function myCreateFunction(obj) {
           var workstable = document.getElementById("worksTable");
           var row = workstable.insertRow(1);
           row.id=""+obj._id;
@@ -250,7 +298,7 @@ objectArray.forEach(element => {
           var cell5 = row.insertCell(5);
           var cell6 = row.insertCell(6);
           var cell7 = row.insertCell(7);
-          cell.innerHTML=obj._id;
+          cell.innerHTML  = obj._id;
           cell1.innerHTML = obj.WorkerNumber;
           cell2.innerHTML = obj.WorkerName;
           cell3.innerHTML = obj.ClientID;
@@ -258,15 +306,6 @@ objectArray.forEach(element => {
           cell5.innerHTML = obj.CarType;
           cell6.innerHTML = obj.Status ;
           cell7.innerHTML = obj.TotalCost;
-
-         /* cell.innerHTML='<th scope="row">5689</th>';
-          cell1.innerHTML = "56422";
-          cell2.innerHTML = "Leeorr";
-          cell3.innerHTML = "205740211";
-          cell4.innerHTML = "49-785-98";
-          cell5.innerHTML = "toy";
-          cell6.innerHTML = "on work";
-          cell7.innerHTML = "4500";*/
           var rows = workstable.getElementsByTagName("tr");
           rows[1].onclick = function(event) {
             var orderID= this.id;
@@ -274,10 +313,46 @@ objectArray.forEach(element => {
             req.done(handleServerResponse);
           }
       }
-        function myDeleteFunction() {
+
+      
+
+      function myDeleteFunction() {
           document.getElementById("worksTable").deleteRow(1);
         }
-       
+      
+      function okAddWork(){
+        var clientID=document.getElementsByName("ClientID")[0].value;
+        var status=document.getElementsByName("status")[0].value;
+        var carID= document.getElementsByName("CarNumber")[0].value;
+        var carType =document.getElementsByName("CarType")[0].value;
+        var workerNum= document.getElementsByName("workerNum")[0].value;
+        var workerName=document.getElementsByName("workerName")[0].value;
+        var problemDiscription=document.getElementsByName("ProblemDescription")[0].value;
+        var TotalCost=document.getElementsByName("TotalCost")[0].value;
+        var orderNum=document.getElementsByName("orderNum")[0].value;
+        workNumber++;
+        if(!(TotalCost==""||clientID==""||status==""||carID==""||carType==""||problemDiscription=="")){
+          var newWork = {
+            '_id': orderNum,
+            'clientID' :clientID,
+            'status' : status,
+            'carID' : carID, 
+            'carType' : carType,
+            'workerNumber' :workerNum,
+            'workerName' : workerName, 
+            'problemDiscription' : problemDiscription,
+            'TotalCost' : TotalCost
+          };
+          var req = $.post('/addWork',newWork); //sendeing post request to the server for workslist
+          req.done(handleServerResponse);
+        }
+        else alert("Please fill all field");
+      }
+      
+      function cancelClicked(){
+          $('#workDetails').hide();
+        }
+        
  var sortBy = $('#colNameSort').on('change', sortTable);
 function sortTable() {
   var table, rows,col, switching, i, x, y, shouldSwitch;
