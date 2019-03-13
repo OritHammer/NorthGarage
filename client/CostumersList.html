@@ -285,6 +285,60 @@
           }
         }
         
+         $(document).ready(function () {
+        var req = $.post('/worksList'); //sendeing post request to the server for workslist
+        req.done(handleServerResponse);
+        req = $.post('/getEmpDetails'); //sendeing post request to the server for employee details
+        req.done(handleServerResponse);
+        var $S = $('#colNameSearch').on('change', filter);
+        var $i = $("#searchByInput").on('keyup', filter);
+        var $rows = $("#worksTable tbody > tr");
+    
+        function filter() {
+          var input = document.getElementById("searchByInput");
+          if(input){
+            var f = input.value.toUpperCase();
+            var table = document.getElementById("worksTable");
+            var tr = table.getElementsByTagName("tr");
+            var filterBy= $('#colNameSearch').val();
+            switch(filterBy){
+              case 'Order Number':
+                colFiltering=0;
+                break;
+              case 'Worker Number':
+                colFiltering=1;
+                break;
+              case 'Worker Name':
+                colFiltering=2;
+                break;
+              case 'Client ID':
+                colFiltering=3;
+                break;
+              case 'CarID':
+                colFiltering=4;
+                break;
+              case 'Car Type':
+                colFiltering=5;
+                break;
+              case 'Status':
+                colFiltering=6;
+                break;
+              case 'Total Cost $':
+                colFiltering=7;
+                break;
+              }
+            for (var i = 1; i < tr.length; i++) {
+                var row = tr[i].getElementsByTagName("td");
+                var col=row[colFiltering].innerHTML.toUpperCase();
+                if (col.indexOf(f) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }      
+            }
+           }
+          };
+        });
 
 
       </script>
