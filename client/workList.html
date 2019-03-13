@@ -67,38 +67,7 @@
               <th scope="col7">Total Cost $</th>
             </tr>
           </thead>
-          <tbody id="workesList">
-            <tr>
-                <th scope="row">4656</th>
-                <td>31312482</td>
-                <td>Mark</td>
-                <td>client id 1</td>
-                <td>car id 1</td>
-                <td>car type 1</td>
-                <td>status 1</td>
-                <td>total cost 50</td>
-              </tr>
-              <tr>
-                <th scope="row">4657</th>
-                <td>14412444</td>
-                <td>Jacob</td>
-                <td>client id 2</td>
-                <td>car id 2</td>
-                <td>car type 2</td>
-                <td>status 2</td>
-                <td>total cost 100</td>
-              </tr>
-              <tr>
-                <th scope="row" >4658</th>
-                <td>12111123</td>
-                <td>Larry the Bird</td>
-                <td>client id 3</td>
-                <td>car id 3</td>
-                <td>car type 3</td>
-                <td>status 3</td>
-                <td>total cost 122</td>
-              </tr>
-        </tbody>
+          <tbody id="workesList"></tbody>
         </table>
         <div class="grid-container">
             <div class="item1"></div>
@@ -167,7 +136,7 @@
             <div class="grid-container">
                 <div class="item1"><button id='okBtn'type="button" onclick="okAddWork()">ok</button>
                                     <button id='updateBtn'type="button" onclick="upDateWorkDetails()">Update</button></div>
-                <div class="item2"><button id="del" type="submit">Delete</button></div>
+                <div class="item2"><button id="del" type="submit" onclick="deleteWork()">Delete</button></div>
                 <div class="item3"> <button type="button" onclick="cancelClicked()" class="cancelbtn">Cancel</button></div>
               </div>
            <br>
@@ -184,6 +153,9 @@ var workNumber = 400000 ;
 function handleServerResponse(res){
   switch(res.message){
     case "worksList":
+        if(!res.success){
+          break;
+        }
         createRow(res.obj);
       break;
     case "getEmpDetails":
@@ -223,17 +195,23 @@ function handleServerResponse(res){
       case "upDateWork":
       alert("work upDated successfully");
       $('#workDetails').hide();
+      myCreateFunction(res.obj)
       break;
+      case "deleteWork":
+        alert("work deleted successfully");
+        $('#workDetails').hide();
+        break;
   }
 }
-function indexOfStatusOption(status){
-  switch(status){
-    case 'Pending': return 0;
-    case 'on work': return 1;
-    case 'finished': return 2;
-    case 'paid up': return 3;
-    }
-}
+
+      function indexOfStatusOption(status){
+        switch(status){
+          case 'Pending': return 0;
+          case 'on work': return 1;
+          case 'finished': return 2;
+          case 'paid up': return 3;
+          }
+      }
 
 
        /**serch by listener**/
@@ -242,22 +220,66 @@ function indexOfStatusOption(status){
         req.done(handleServerResponse);
         req = $.post('/getEmpDetails'); //sendeing post request to the server for employee details
         req.done(handleServerResponse);
-          var $s = $('#colNameSearch').on('change', filter);
-          var $i = $("#searchByInput").on('keyup', filter);
-          var $rows = $("#worksTable tbody > tr");
+        var $S = $('#colNameSearch').on('change', filter);
+        var $i = $("#searchByInput").on('keyup', filter);
+        var $rows = $("#worksTable tbody > tr");
     
-          function filter() {
-              var index = $s.prop('selectedIndex');
-              var term = $.trim($i.val().toLowerCase());
-              if (term.length === 0) {
-                  $rows.show();
-                  return;
+        function filter() {
+          var input = document.getElementById("searchByInput");
+          if(input){
+            var f = input.value.toUpperCase();
+            var table = document.getElementById("worksTable");
+            var tr = table.getElementsByTagName("tr");
+            var filterBy= $('#colNameSearch').val();
+            switch(filterBy){
+              case 'Order Number':
+                colFiltering=0;
+                break;
+              case 'Worker Number':
+                colFiltering=1;
+                break;
+              case 'Worker Name':
+                colFiltering=2;
+                break;
+              case 'Client ID':
+                colFiltering=3;
+                break;
+              case 'CarID':
+                colFiltering=4;
+                break;
+              case 'Car Type':
+                colFiltering=5;
+                break;
+              case 'Status':
+                colFiltering=6;
+                break;
+              case 'Total Cost $':
+                colFiltering=7;
+                break;
               }
-          /**hide the not rellevant row**/
-              $rows.hide().filter(function () {
-                  return this.cells[index].textContent.toLowerCase().indexOf(term) > -1;
-              }).show();
+            for (var i = 1; i < tr.length; i++) {
+                var row = tr[i].getElementsByTagName("td");
+                var col=row[colFiltering].innerHTML.toUpperCase();
+                if (col.indexOf(f) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }      
+                // Hide the row initially.
+            /* tr[i].style.display = "none";
 
+              td = tr[i].getElementsByTagName("td");
+            /*  for (var j = 0; j < td.length; j++) {
+                var cell = tr[i].getElementsByTagName("td")[j];
+                if (cell) {
+                  if (cell.innerHTML.toUpperCase().indexOf(colFiltering) > -1) {
+                    tr[i].style.display = "";
+                    break;
+                  } 
+                }
+              }*/
+            }
+           }
           };
         });
 
@@ -265,8 +287,8 @@ function indexOfStatusOption(status){
       function addwork(){//open add work form
         document.getElementById('okBtn').style.display='block';
         $('#updateBtn').hide();
-          document.getElementById('workDetails').style.display='block';
-          $('#del').hide();
+        document.getElementById('workDetails').style.display='block';
+        $('#del').hide();
         document.getElementsByName("ProblemDescription")[0].value = ""; 
         document.getElementsByName("TotalCost")[0].value = "";
         document.getElementsByName("orderNum")[0].value = workNumber + 1;
@@ -281,6 +303,11 @@ function indexOfStatusOption(status){
         document.getElementsByName("workerName")[0].value = empDetails.WorkerName; 
         document.getElementsByName("workerName")[0].readOnly = true; 
         document.getElementsByName("workerNum")[0].readOnly = true; 
+        }
+
+      function deleteRow(DataID){
+          var row=document.getElementById(""+DataID);
+          row.parentNode.removeChild(row);
         }
 
       function createRow(objectArray){//create few row in worksTable
@@ -316,22 +343,33 @@ function indexOfStatusOption(status){
             req.done(handleServerResponse);
           }
       }
+
+
       function upDateWorkDetails(){//update work in DataBase and work Table
         var upDateWork = gettingDataFromElements();
         var req = $.post('/upDateWork',upDateWork); //sendeing post request to the server for workslist
-          req.done(handleServerResponse);
-
-
-
+        deleteRow(upDateWork._id) ;
+        req.done(handleServerResponse);
       }
       
+      function deleteWork(){
+        var delWorkID=$('[name="orderNum"]').val();
+        var returnVal = confirm("You are about to delete customer with ID:"+
+                  delWorkID +" are you sure you want to continue ?");
+          if( returnVal == true ) {
+            var req = $.post('/deleteWork',{_id: delWorkID}); //post request to delete Customer
+            deleteRow(delWorkID);
+            req.done(handleServerResponse);
+             }
+            else {
+                return false;
+               }
+       }
 
-      function myDeleteFunction() {
-          document.getElementById("worksTable").deleteRow(1);
-        }
-        function gettingDataFromElements(){
+
+      function gettingDataFromElements(){
         var work = {
-          '_id': document.getElementsByName("orderNum")[0].value,
+            '_id': document.getElementsByName("orderNum")[0].value,
             'clientID': document.getElementsByName("ClientID")[0].value,
             'status': document.getElementsByName("status")[0].value,
             'carID': document.getElementsByName("CarNumber")[0].value, 
@@ -340,83 +378,72 @@ function indexOfStatusOption(status){
             'workerName': document.getElementsByName("workerName")[0].value, 
             'problemDiscription': document.getElementsByName("ProblemDescription")[0].value,
             'TotalCost': document.getElementsByName("TotalCost")[0].value
-        };
+        }; 
         return work; 
-        }
+        }  
 
       function okAddWork(){
         newWork = gettingDataFromElements();
         workNumber++;
-        if(!(newWork.TotalCost==""||newWork.clientID==""||newWork.status==""
-              ||newWork.carID==""||newWork.carType==""||newWork.problemDiscription=="")){
-          /*var newWork = {
-            '_id': orderNum,
-            'clientID' :clientID,
-            'status' : status,
-            'carID' : carID, 
-            'carType' : carType,
-            'workerNumber' :workerNum,
-            'workerName' : workerName, 
-            'problemDiscription' : problemDiscription,
-            'TotalCost' : TotalCost
-          };*/
+        if(!(newWork.TotalCost==""||newWork.ClientID==""||newWork.Status==""
+              ||newWork.carID==""||newWork.CarType==""||newWork.problemDiscription=="")){
           var req = $.post('/addWork',newWork); //sendeing post request to the server for workslist
           req.done(handleServerResponse);
         }
-        else alert("Please fill all field");
+        else alert("Please fill all fields");
       }
       
       function cancelClicked(){
           $('#workDetails').hide();
         }
         
- var sortBy = $('#colNameSort').on('change', sortTable);
-function sortTable() {
-  var table, rows,col, switching, i, x, y, shouldSwitch;
-  table = document.getElementById("worksTable");
-  sortBy= $('#colNameSort').val();
-  switching = true;
-  switch(sortBy){
-   case 'WorkerNum':
-    col=1;
-    break;
-   case 'CarID':
-    col=4;
-    break;
-   case 'Status':
-    col=6;
-    break;
-  }
-  /*Make a loop that will continue until
-  no switching has been done:*/
-  while (switching) {
-    //start by saying: no switching is done:
-    switching = false;
-    rows = table.rows;
-    /*Loop through all table rows (except the
-    first, which contains table headers):*/
-    for (i = 1; i < (rows.length - 1); i++) {
-      //start by saying there should be no switching:
-      shouldSwitch = false;
-      /*Get the two elements you want to compare,
-      one from current row and one from the next:*/
-      x = rows[i].getElementsByTagName("TD")[col];
-      y = rows[i + 1].getElementsByTagName("TD")[col];
-      //check if the two rows should switch place:
-      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-        //if so, mark as a switch and break the loop:
-        shouldSwitch = true;
-        break;
+      var sortBy = $('#colNameSort').on('change', sortTable);
+      function sortTable() {
+        var table, rows,col, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("worksTable");
+        sortBy= $('#colNameSort').val();
+        switching = true;
+        switch(sortBy){
+        case 'WorkerNum':
+          col=1;
+          break;
+        case 'CarID':
+          col=4;
+          break;
+        case 'Status':
+          col=6;
+          break;
+        }
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+          //start by saying: no switching is done:
+          switching = false;
+          rows = table.rows;
+          /*Loop through all table rows (except the
+          first, which contains table headers):*/
+          for (i = 1; i < (rows.length - 1); i++) {
+            //start by saying there should be no switching:
+            shouldSwitch = false;
+            /*Get the two elements you want to compare,
+            one from current row and one from the next:*/
+            x = rows[i].getElementsByTagName("TD")[col];
+            y = rows[i + 1].getElementsByTagName("TD")[col];
+            //check if the two rows should switch place:
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              //if so, mark as a switch and break the loop:
+              shouldSwitch = true;
+              break;
+            }
+          }
+          if (shouldSwitch) {
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+          }
+        }
       }
-    }
-    if (shouldSwitch) {
-      /*If a switch has been marked, make the switch
-      and mark that a switch has been done:*/
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-    }
-  }
-}
 </script>
 
 </body>

@@ -105,25 +105,6 @@ app.post('/worksList' , function(req,res){
   });  
 });
 
-/**
- * returning customer list
- */
-app.post('/customersList' , function(req,res){
-  var resultArr = [] ;
-  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
-    if (err) throw err;
-    var dataBaseObject = db.db("projDB");
-     var cursor = dataBaseObject.collection('customers').find();
-     cursor.forEach(function(doc,err){
-      if (err) throw err;
-      if(doc === null) callback(false,res,null,'customersList');
-      resultArr.push(doc);
-     }, function(){
-       db.close();
-     });
-     callback(true,res,resultArr,'customersList');
-  });  
-});
 
 /**
  * Adding new work 
@@ -182,10 +163,21 @@ app.post('/upDateWork' , function(req,res){
     Status : req.body.status , problemDiscription: req.body.problemDiscription , 
     TotalCost: req.body.TotalCost
      } };
+     var workDitails = {
+      '_id':req.body._id, 
+      'WorkerNumber': req.body.workerNumber,
+      'WorkerName': req.body.workerName,
+      'ClientID': req.body.clientID,
+      'CarID': req.body.carID ,
+      'CarType' : req.body.carType,
+      'Status': req.body.status ,
+      'problemDiscription': req.body.problemDiscription ,
+      'TotalCost': req.body.TotalCost
+    };
     dataBaseObject.collection("works").updateOne(upDateByID,newvalues);
     console.log("work upDated"); 
     db.close();
-    callback(true,  res,"success",'upDateWork');
+    callback(true,  res,workDitails,'upDateWork');
   });
 });
 
@@ -194,7 +186,92 @@ app.post('/getEmpDetails' , function(req,res){
 });
 
 
-  
+app.post('/deleteWork', function(req,res){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+    dataBaseObject.collection("works").deleteOne( { _id: req.body._id } );
+    console.log("work deleted"); 
+    db.close();
+    callback(true,  res,"success",'deleteWork');
+    });
+  });
+
+/**************         CUSTOMER          *******************/
+app.post('/addCustomer',function(req,res){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+    success=false;
+    dataBaseObject.collection("customers").insertOne({
+      _id: req.body._id,
+      customerFirstName: req.body.customerFirstName,
+      customerLastName: req.body.customerLastName,
+      customerPhone: req.body.customerPhone});
+    console.log("customer added"); 
+    db.close();
+    callback(true,  res,req.body,'addCustomer');
+  });
+});
+
+app.post('/showCustomerDetails',function(req,res){
+  var result;
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+     dataBaseObject.collection('customers').findOne({_id: req.body._id},
+      function(err, work) {
+        if (result===null)
+          callback(false,res,null,'showCustomerDetails');
+        else callback(true,res,work,'showCustomerDetails');
+    });
+  });
+});
+
+app.post('/customerList', function(req,res){
+  var resultArr = [] ;
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+     var cursor = dataBaseObject.collection('customers').find();
+     cursor.forEach(function(doc,err){
+      if (err) throw err;
+      if(doc === null) callback(false,res,null,'customerList');
+      resultArr.push(doc);
+     }, function(){
+      callback(true,res,resultArr,'customerList');
+       db.close();
+     });
+  });  
+});
+
+app.post('/upDateCustomer' , function(req,res){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+    var upDateByID = { _id:req.body._id };
+    var newvalues = { $set: { customerFirstName: req.body.customerFirstName,
+                              customerLastName: req.body.customerLastName,
+                              customerPhone: req.body.customerPhone} };
+    
+    dataBaseObject.collection("customers").updateOne(upDateByID,newvalues);
+    console.log("work upDated"); 
+    db.close();
+    callback(true,  res,req.body,'upDateCustomer');
+    });
+  });
+
+  app.post('/deleteCustomer', function(req,res){
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+      if (err) throw err;
+      var dataBaseObject = db.db("projDB");
+      dataBaseObject.collection("customers").deleteOne( { _id: req.body._id } );
+      console.log("customer deleted"); 
+      db.close();
+      callback(true,  res,"success",'deleteCustomer');
+      });
+    });
+
   
 
     function callback(bool, res,obj,message){
@@ -227,11 +304,3 @@ app.get('/CostumersList',(req,res)=>{
   res.sendFile(__dirname+'/client/CostumersList.html');
 });
 
-   /* GET userlist */
-router.get('/worksList', function(req, res) {
-var db = req.db;
-var collection = db.get('works');
-collection.find({},{},function(e,docs){
-res.json(docs);
-});
-});
