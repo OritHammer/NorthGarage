@@ -67,13 +67,15 @@ app.post('/signUp' , function(req,res){
              if(user === null){
                 dataBaseObject.collection("employees").insertOne({_id:req.body.workerNum, 
                     WorkerName: req.body.workerName,
-                    password: req.body.password});
+                    password: req.body.password,
+                    type : req.body.type});
                 console.log("user added"); 
                 db.close();
                 var worker = {
                   'workerNumber' : req.body.workerNum, 
                   'WorkerName' : req.body.workerName,
-                  'password' : req.body.password
+                  'password' : req.body.password,
+                  'type' : req.body.type
                 };
                 callback(true, res,worker,'signUp');
              }else {
@@ -89,7 +91,6 @@ app.post('/resetPassword' , function(req,res){
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
     var dataBaseObject = db.db("projDB");
-       success=false;
      dataBaseObject.collection('employees').findOne({ _id: req.body.managerNumber},
       function(err, result) {
         if (err) throw err;
@@ -99,7 +100,8 @@ app.post('/resetPassword' , function(req,res){
           dataBaseObject.collection('employees').findOne({ _id: req.body.workerNum},
             function(err, user) {
               if (err) throw err;
-              callback(true, res,user.password,'resetPassword');
+              if(user===null)  callback(false, res,null,'resetPassword');
+               else callback(true, res,user.password,'resetPassword');
             });
         }
         else{
