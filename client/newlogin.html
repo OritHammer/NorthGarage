@@ -37,12 +37,10 @@
         <input id="userPassword" type="password" placeholder="Enter Password" name="psw" required><br>
         <input type="checkbox" checked="checked" name="remember"> Remember me
         <button type="submit" onclick="login()">Login</button>
-        <label> 
-      
-       <span class="psw">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Forgot <a href="#">password?</a></span>
-        </label>
+        
          <br><br>
         <button onclick="document.getElementById('signUpWindows').style.display='block'" style="width:auto;">Sign Up</button>
+        <button onclick="document.getElementById('forgotPasswordWindow').style.display='block'" style="width:auto;">forgot password ?</button>
         </div>
         <!--end login window -->
         <br>
@@ -74,42 +72,74 @@
                 <div class="clearfix">
                   <button type="submit" onclick="signUp()">Sign Up</button>
                   <br>
-                
-
-                  
                 </div>
                 <br>
               </div>
             </form>
           </div>
           <!--end sign up window -->
-  
+<!--forgotPassword window -->
+<div id="forgotPasswordWindow" class="popWindow-background">
+            
+    <form class="popwindow-content">
+      <div class="container-fluid">
+        <span onclick="$('#forgotPasswordWindow').hide();" class="close" title="Close popWindow">&times;</span>
+        <h1 align="center" style = "font-family:Comic Sans MS;">Reset Password</h1>
+        <p>Please fill in this form to reset your password.</p>
+        <hr>
+        <label for="workerNum"><b>Enter worker number:</b></label><br>
+        <input id="workerNumber" type="text" placeholder="Enter worker number" required><br>
+
+        <label for="manager"><b>Please Enter manager code number</b></label><br>
+        <input id="managerNumber" type="text" required><br>
+
+        <label for="mamagerPassword"><b>Please Enter manager password</b></label><br>
+        <input id="managerPassword" type="password" required><br>
+    
+        <div class="clearfix">
+          <button type="submit" onclick="resetingPassword()">reset password</button>
+          <br> 
+        </div>
+        <br>
+      </div>
+    </form>
+  </div>  
 
  <script>
 var workNumber = 400000 ;
 
 function handleServerResponse(res){
-//res.success
+var message="";
 switch(res.message){
 case "login":
-if(res.success){
-  window.location.href = "http://localhost:3000/homepage";
-  alert(" Hello "+res.obj); // To change name on navbar
-}else {
-  alert(" User Name Or Password Not Valid");
-}
-break;
+  if(res.success){
+    window.location.href = "http://localhost:3000/homepage";
+    alert(" Hello "+res.obj); // To change name on navbar
+  }else {
+    alert(" User Name Or Password Not Valid");
+  }
+  break;
 case "signUp":
-if(res.success) {
-    var message="your userName is: "+res.obj.workerNumber+" your password is "+res.obj.password+" Enter OK to log in";
+  if(res.success) {
+      message="your userName is: "+res.obj.workerNumber+" your password is "+res.obj.password+" Enter OK to log in";
+      alert(message);
+  }
+  else {
+    message = "You allredy signed up try to login";
     alert(message);
-}
-else {
-  var message = "You allredy signed up try to login";
-  alert(message);
-}
-$('#signUpWindows').hide();
-window.location.href = "http://localhost:3000" ;
+  }
+  $('#signUpWindows').hide();
+  window.location.href = "http://localhost:3000" ;
+  break;
+case "resetPassword":
+  if(res.success){
+    message="your password is: "+res.obj+" Enter OK to log in";
+    alert(message);
+    $('#forgotPasswordWindow').hide();
+  }
+
+break;
+
 }
 
 }
@@ -150,6 +180,20 @@ function login(){
       } 
     }
  }
+
+ function resetingPassword(){
+  var workerNum=$('#workerNumber').val();
+  var managerNumber=$('#managerNumber').val();
+  var managerPassword=$('#managerPassword').val();
+  var resetPass={
+    'workerNum': workerNum,
+    'managerNumber': managerNumber,
+    'managerPassword': managerPassword
+   }
+   var req = $.post('/resetPassword',resetPass); //sendeing post request to the server for reset Password
+   req.done(handleServerResponse);
+ }
+
  </script>
 
 </body>

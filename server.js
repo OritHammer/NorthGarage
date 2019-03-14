@@ -84,7 +84,31 @@ app.post('/signUp' , function(req,res){
     });
   }); 
 });
-
+ 
+app.post('/resetPassword' , function(req,res){
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
+    if (err) throw err;
+    var dataBaseObject = db.db("projDB");
+       success=false;
+     dataBaseObject.collection('employees').findOne({ _id: req.body.managerNumber},
+      function(err, result) {
+        if (err) throw err;
+        if(result === null)
+          callback(false, res,null,'resetPassword');
+        else if (result._id == req.body.managerNumber && result.password == req.body.managerPassword&& result.type=="manager" ){
+          dataBaseObject.collection('employees').findOne({ _id: req.body.workerNum},
+            function(err, user) {
+              if (err) throw err;
+              callback(true, res,user.password,'resetPassword');
+            });
+        }
+        else{
+          callback(false, res,null,'resetPassword');
+        }
+        db.close(); 
+      });
+  }); 
+});
 /**
  * returning works List
  */

@@ -34,14 +34,14 @@
     <!--website body -->
      <div class="custom-select" style="width:200px;">
        <p>search by : 
-          <select>
-            <option value="CustomerID">Customer ID</option>
-            <option value="CustomerFirstName">Customer first Name</option>
-            <option value="CustomerLastName">Customer last Name</option>
-            <option value="CustomerPhone">Customer phone</option>
+          <select id="colNameSearch">
+            <option value="Customer ID">Customer ID</option>
+            <option value="Customer First Name">Customer first Name</option>
+            <option value="Customer Last Name">Customer last Name</option>
+            <option value="Customer Phone">Customer phone</option>
           </select>
         </div>
-      Search : <input id="myInput" type="text" name="search" style="width:200px;"><br>
+      Search : <input id="searchByInput" type="text" name="search" style="width:200px;"><br>
       <div class="custom-select" style="width:200px;">
           Sort By : 
           <select id="colNameSort">
@@ -55,8 +55,8 @@
           <thead>
             <tr>
               <th scope="col1">Customer ID</th>
-              <th scope="col2">Customer first Name</th>
-              <th scope="col3">Customer last Name</th>
+              <th scope="col2">Customer First Name</th>
+              <th scope="col3">Customer Last Name</th>
               <th scope="col4">Customer phone</th>
             </tr>
           </thead>
@@ -106,11 +106,7 @@
 
      <script>
    
-      $(document).ready(function () {
-        var req = $.post('/customerList'); //sendeing post request to the server for workslist
-        req.done(handleServerResponse);
-      });
-
+      
         function handleServerResponse(res){
             switch(res.message){ 
               case "customerList":
@@ -195,7 +191,7 @@
         else alert("Please fill all fields");
       }
 
-      function createRow(objectArray){//create few row in worksTable
+      function createRow(objectArray){//create few row in customersTable
          objectArray.forEach(element => {
           myCreateFunction(element);
           }); 
@@ -285,49 +281,38 @@
           }
         }
         
-         $(document).ready(function () {
-        var req = $.post('/worksList'); //sendeing post request to the server for workslist
+        
+        $(document).ready(function () {
+        var req = $.post('/customerList'); //sendeing post request to the server for workslist
         req.done(handleServerResponse);
-        req = $.post('/getEmpDetails'); //sendeing post request to the server for employee details
-        req.done(handleServerResponse);
+
         var $S = $('#colNameSearch').on('change', filter);
         var $i = $("#searchByInput").on('keyup', filter);
-        var $rows = $("#worksTable tbody > tr");
-    
+        var $rows = $("#customersTable tbody > tr");
+
         function filter() {
           var input = document.getElementById("searchByInput");
           if(input){
             var f = input.value.toUpperCase();
-            var table = document.getElementById("worksTable");
+            var table = document.getElementById("customersTable");
             var tr = table.getElementsByTagName("tr");
             var filterBy= $('#colNameSearch').val();
+            
             switch(filterBy){
-              case 'Order Number':
+              case 'Customer ID':
                 colFiltering=0;
                 break;
-              case 'Worker Number':
+              case 'Customer First Name':
                 colFiltering=1;
                 break;
-              case 'Worker Name':
+              case 'Customer Last Name':
                 colFiltering=2;
                 break;
-              case 'Client ID':
+              case 'Customer Phone':
                 colFiltering=3;
                 break;
-              case 'CarID':
-                colFiltering=4;
-                break;
-              case 'Car Type':
-                colFiltering=5;
-                break;
-              case 'Status':
-                colFiltering=6;
-                break;
-              case 'Total Cost $':
-                colFiltering=7;
-                break;
               }
-            for (var i = 1; i < tr.length; i++) {
+              for (var i = 1; i < tr.length; i++) {
                 var row = tr[i].getElementsByTagName("td");
                 var col=row[colFiltering].innerHTML.toUpperCase();
                 if (col.indexOf(f) > -1) {
@@ -336,9 +321,9 @@
                     tr[i].style.display = "none";
                 }      
             }
-           }
-          };
-        });
+         }
+      };
+    });
 
 
       </script>
