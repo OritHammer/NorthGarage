@@ -152,10 +152,13 @@ var workNumber = 400000 ;
 function handleServerResponse(res){
   switch(res.message){
     case "worksList":
-        if(!res.success){
-          break;
+        if(res.success){
+         if(res.obj.length>1)
+          createRow(res.obj);
+          else 
+          myCreateFunction(res.obj[0]);
         }
-        createRow(res.obj);
+       
       break;
     case "getEmpDetails":
       if(res.success) {
